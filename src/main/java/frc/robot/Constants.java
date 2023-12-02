@@ -52,7 +52,7 @@ public class Constants {
     public static final double DRIVE_GEAR_RATIO = 6.75 / 1.0; // 6.75:1
     public static final double DRIVE_ROTATIONS_TO_METERS = WHEEL_CIRCUMFERENCE / DRIVE_GEAR_RATIO;
     public static final double DRIVE_RPM_TO_METERS_PER_SECOND = DRIVE_ROTATIONS_TO_METERS / 60.0;
-    public static final double ANGLE_GEAR_RATIO = 21.4 / 1.0; // 21.4:1
+    public static final double ANGLE_GEAR_RATIO = (150 / 7) / 1.0; // 21.4:1
     public static final double ANGLE_ROTATIONS_TO_RADIANS = (Math.PI * 2) / ANGLE_GEAR_RATIO;
     public static final double ANGLE_RPM_TO_RADIANS_PER_SECOND = DRIVE_ROTATIONS_TO_METERS / 60.0;
 
@@ -86,8 +86,9 @@ public class Constants {
     public static final double MAX_ANGULAR_RADIANS_PER_SECOND = 4.0;
 
     /** Inversions. */
-    public static final boolean DRIVE_MOTOR_INVERSION = true;
-    public static final boolean ANGLE_MOTOR_INVERSION = false;
+    public static final boolean DRIVE_MOTOR_INVERSION = false;
+    
+    public static final boolean ANGLE_MOTOR_INVERSION = true;
     public static final boolean CANCODER_INVERSION = false;
 
     /** Idle modes. */
@@ -110,17 +111,17 @@ public class Constants {
       4,
       3,
       10,
-      29.004 
-    );
-
-    public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants(
-      6,
-      5,
-      11,
-      213.135
+      208.652
     );
 
     public static final SwerveModuleConstants MOD_3_Constants = new SwerveModuleConstants(
+      6,
+      5,
+      11,
+      33.750
+    );
+
+    public static final SwerveModuleConstants MOD_2_Constants = new SwerveModuleConstants(
       8,
       7,
       12,

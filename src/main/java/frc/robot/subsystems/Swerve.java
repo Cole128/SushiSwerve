@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -32,10 +33,12 @@ public class Swerve extends SubsystemBase {
       new SwerveModule(1, Constants.kSwerve.MOD_1_Constants),
       new SwerveModule(2, Constants.kSwerve.MOD_2_Constants),
       new SwerveModule(3, Constants.kSwerve.MOD_3_Constants),
+      
     };
 
     swerveOdometry = new SwerveDriveOdometry(Constants.kSwerve.KINEMATICS, getYaw(), getPositions());
     zeroGyro();
+    
   }
 
   /** 
@@ -47,6 +50,7 @@ public class Swerve extends SubsystemBase {
    */
   public Command drive(DoubleSupplier forwardBackAxis, DoubleSupplier leftRightAxis, DoubleSupplier rotationAxis, boolean isFieldRelative, boolean isOpenLoop) {
     return run(() -> {
+
       // Grabbing input from suppliers.
       double forwardBack = forwardBackAxis.getAsDouble();
       double leftRight = leftRightAxis.getAsDouble();
