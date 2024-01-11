@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -120,6 +119,7 @@ public class Swerve extends SubsystemBase {
   private void zeroGyro() {
     gyro.zeroYaw();
   }
+  
 
   public Pose2d getPose() {
     return swerveOdometry.getPoseMeters();

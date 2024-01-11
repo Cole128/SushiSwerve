@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.utils.SwerveModuleConstants;
@@ -27,6 +28,7 @@ public class Constants {
     public static final int ROTATION_AXIS = XboxController.Axis.kRightX.value;
 
     public static final int GYRO_RESET_BUTTON = XboxController.Button.kY.value;
+    public static final int ROBOT_CENTRIC_BUTTON =XboxController.Button.kLeftBumper.value;
 
     // Prevent from acclerating/decclerating to quick
     public static final SlewRateLimiter X_DRIVE_LIMITER = new SlewRateLimiter(4);
@@ -129,14 +131,19 @@ public class Constants {
     );
   }
 
-  public static class kAuto {
-    /** PID Values. */
-    public static final double X_CONTROLLER_KP = 1.0;
-    public static final double Y_CONTROLLER_KP = 1.0;
-    public static final double THETA_CONTROLLER_KP = 1.0;
-    
-    /** Constraints. */
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 2.0;
-    public static final double MAX_ACCEL_METERS_PER_SECOND_SQUARED = 5.0;
-  }
+  public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    /* Constraint for the motion profilied robot angle controller */
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+        new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+}
 }
