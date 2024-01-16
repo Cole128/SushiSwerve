@@ -1,5 +1,9 @@
 package frc.robot.utils;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -16,14 +20,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants;
 
 public class SwerveModule {
   public final int moduleNumber;
 
-  private final CANSparkMax driveMotor;
+  private final WPI_TalonSRX driveMotor;
+  private final TalonSRXFeedbackDevice feedback;
   private final RelativeEncoder driveEncoder;
-  private final SparkMaxPIDController drivePID;
+  //private final PIDController drivePID;
   private final SimpleMotorFeedforward driveFeedforward;
 
   private final CANSparkMax angleMotor;
@@ -38,9 +44,10 @@ public class SwerveModule {
   public SwerveModule(int moduleNumber, SwerveModuleConstants constants) {
     this.moduleNumber = moduleNumber;
     
-    driveMotor = new CANSparkMax(constants.driveMotorID, MotorType.kBrushless);
-    driveEncoder = driveMotor.getEncoder();
-    drivePID = driveMotor.getPIDController();
+    driveMotor = new WPI_TalonSRX(constants.driveMotorID);
+    // driveEncoder = ;
+    driveMotor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+    //drivePID = new PIDController(Constants.kSwerve.DRIVE_KP, Constants.kSwerve.DRIVE_KI, Constants.kSwerve.DRIVE_KD);
     driveFeedforward = new SimpleMotorFeedforward(Constants.kSwerve.DRIVE_KS, Constants.kSwerve.DRIVE_KV, Constants.kSwerve.DRIVE_KA);
 
     angleMotor = new CANSparkMax(constants.angleMotorID, MotorType.kBrushless);
@@ -89,21 +96,21 @@ public class SwerveModule {
   }
 
   public SwerveModulePosition getPosition() {
-    double distance = driveEncoder.getPosition();
+    double distance = driveMotor.getSelectedSensorVelocity();
     Rotation2d rot = new Rotation2d(angleEncoder.getPosition());
     return new SwerveModulePosition(distance, rot);
   }
 
   private void configureDevices() {
     // Drive motor configuration.
-    driveMotor.restoreFactoryDefaults();
+    driveMotor.configFactoryDefault();
     driveMotor.setInverted(Constants.kSwerve.DRIVE_MOTOR_INVERSION);
-    driveMotor.setIdleMode(Constants.kSwerve.DRIVE_IDLE_MODE);
-    driveMotor.setOpenLoopRampRate(Constants.kSwerve.OPEN_LOOP_RAMP);
-    driveMotor.setClosedLoopRampRate(Constants.kSwerve.CLOSED_LOOP_RAMP);
-    driveMotor.setSmartCurrentLimit(Constants.kSwerve.DRIVE_CURRENT_LIMIT);
+    driveMotor.setNeutralMode(NeutralMode.Brake);
+    driveMotor.configOpenloopRamp(Constants.kSwerve.OPEN_LOOP_RAMP);
+    driveMotor.configClosedloopRamp(Constants.kSwerve.CLOSED_LOOP_RAMP);
+    driveMotor.configPeakCurrentLimit(Constants.kSwerve.DRIVE_CURRENT_LIMIT);
  
-    drivePID.setP(Constants.kSwerve.DRIVE_KP);
+    driveMotor.config_kP(-1, Constants.kSwerve.DRIVE_KP);
     drivePID.setI(Constants.kSwerve.DRIVE_KI);
     drivePID.setD(Constants.kSwerve.DRIVE_KD);
     drivePID.setFF(Constants.kSwerve.DRIVE_KF);
